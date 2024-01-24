@@ -1,4 +1,0 @@
--Faire la fonction Add_Message en partant de la table de la db.
--Pouvoir ajouter des messages dans la table et les afficher sur la page html.
--Ajouter un bouton et une zone de texte pour ajouter les messages.
--Gerer l'envoie des message et la DB.

@@ -63,14 +63,15 @@ func CreateBDD() {
 
 	// Création de la table s'il n'existe pas
 	createTable = `
-				CREATE TABLE IF NOT EXISTS "discussion" (
-					"id"	INTEGER NOT NULL UNIQUE,
-					"user_id"	INTEGER NOT NULL,
-					"title"	TEXT NOT NULL,
-					"message"	TEXT NOT NULL,
-					FOREIGN KEY("user_id") REFERENCES "user"("id"),
-					PRIMARY KEY("id" AUTOINCREMENT)
-				)
+					CREATE TABLE IF NOT EXISTS "discussion" (
+						"id"	INTEGER NOT NULL UNIQUE,
+						"user_id"	INTEGER NOT NULL,
+						"title"	TEXT NOT NULL,
+						"message"	TEXT NOT NULL,
+						"bool_edit"	INTEGER NOT NULL DEFAULT 0,
+						FOREIGN KEY("user_id") REFERENCES "user"("id"),
+						PRIMARY KEY("id" AUTOINCREMENT)
+					);
 				`
 	_, err = db.Exec(createTable)
 	if err != nil {
@@ -97,15 +98,16 @@ func CreateBDD() {
 
 	// Création de la table s'il n'existe pas
 	createTable = `
-				CREATE TABLE IF NOT EXISTS "comment" (
-					"id"	INTEGER NOT NULL UNIQUE,
-					"user_id"	INTEGER NOT NULL,
-					"discussion_id"	INTEGER NOT NULL,
-					"message"	TEXT NOT NULL,
-					PRIMARY KEY("id" AUTOINCREMENT),
-					FOREIGN KEY("user_id") REFERENCES "user"("id"),
-					FOREIGN KEY("discussion_id") REFERENCES "discussion"("id")
-				)
+	CREATE TABLE IF NOT EXISTS "comment" (
+		"id"	INTEGER NOT NULL UNIQUE,
+		"user_id"	INTEGER NOT NULL,
+		"discussion_id"	INTEGER NOT NULL,
+		"message"	TEXT NOT NULL,
+		"bool_edit"	INTEGER NOT NULL DEFAULT 0,
+		FOREIGN KEY("user_id") REFERENCES "user"("id"),
+		FOREIGN KEY("discussion_id") REFERENCES "discussion"("id"),
+		PRIMARY KEY("id" AUTOINCREMENT)
+	);
 				`
 	_, err = db.Exec(createTable)
 	if err != nil {
@@ -205,8 +207,6 @@ func OpenBDD() (*sql.DB, error) {
 	}
 	return db, err
 }
-
-
 
 func GetCategoryByName(db *sql.DB, category string) (int, error) {
 	var id int
