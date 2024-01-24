@@ -1,0 +1,201 @@
+/* Style pour le corps de la page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Cette propriété assure une hauteur minimale de 100% de la vue (viewport height) */
+}
+
+
+/* main */
+
+#sectionDiscussionSide{
+    display: flex;
+}
+
+#leftPage{
+    width: 20%;
+    background-color: gray;
+    padding: 10rem 1rem 5rem 1rem;
+    height: 50rem;
+}
+
+#categoryChoose{
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+#categoryChoose label{
+    padding-left: 0.2rem;
+}
+
+label[for="category"]{
+    padding-right: 0.7rem;
+}
+
+#checkboxCategory{
+    max-width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#checkboxCategory div{
+    display: flex;
+    padding-bottom: 0.5rem;
+    padding-right: 0.8rem;
+}
+
+#buttonNewDiscussion{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 10rem;
+}
+
+#formCategory{
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5rem;
+}
+
+#buttonSubmitCategory{
+    padding-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+
+#rightPage{
+    width: 80%;
+}
+
+h1{
+    margin: 3rem 0;
+    text-align: center;
+}
+
+.infoDiscussion{
+    margin-bottom: 1.5rem;
+}
+
+.titleDiscussion{
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.titleDiscussion h2{
+    margin: 1rem 0;
+}
+
+.infoByDiscussion{
+    display: flex;
+    justify-content: space-around;
+}
+
+.messageDiscussion{
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    min-height: 5rem;
+    padding: 0.5rem;
+    margin-bottom: 2rem;
+    width: 80%;
+
+    border: 1px black solid;
+
+}
+
+.likeDislikeDiscission{
+    border-top: 1px solid #ccc;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+.buttonLike{
+    display: flex;
+    align-items: center;
+}
+
+.buttonDislike{
+    display: flex;
+    align-items: center; 
+}
+
+
+/* Style pour les liens dans l'en-tête */
+
+
+.boutonaddpost {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #3498db;
+    color: #ffffff;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.boutonaddpost:hover {
+    background-color: #2980b9;
+}
+
+/* Style pour la liste de discussions */
+.discussion-list {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style pour chaque discussion */
+.discussion {
+    border: 1px solid #ccc;
+    margin-bottom: 2rem;
+    background-color: #fff;
+    transition: transform 0.2s;
+    
+}
+
+/* Style pour les liens de discussion */
+.discussion a {
+    text-decoration: none;
+    color: #3498db;
+}
+
+/* Style pour les liens de discussion au survol */
+.discussion a:hover {
+    text-decoration: underline;
+}
+
+/* Style pour le pied de page */
+footer {
+    background-color: #3498db;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+}
+
+/* Style pour le lien de déconnexion */
+#logout-link {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+
+
+pre {
+    overflow-x: auto; /* Ajoute une barre de défilement horizontale si nécessaire */
+    white-space: pre-wrap; /* Permet aux mots longs de se rompre et d'occuper plusieurs lignes si nécessaire */
+  }

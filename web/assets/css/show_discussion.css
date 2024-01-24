@@ -1,0 +1,163 @@
+/* Set a background color and font for the entire page */
+body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+#sectionPostSide{
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 3rem;
+    border: 1px solid grey;
+    background-color: white;
+}
+
+#thePost{
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+#thePost div{
+    display: flex;
+    align-items: center;
+}
+
+h1{
+    font-size: 3rem;
+}
+
+#message{
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 2rem;
+    border: 1px solid black;
+    min-height: 10rem;
+    padding: 1rem;
+}
+
+
+/* Style the user details section */
+p {
+    margin-bottom: 10px;
+}
+
+#likeDislikePost{
+    margin-top: 3rem;
+    display: flex;
+    justify-content: space-around;
+}
+
+.buttonLike{
+    display: flex;
+    align-items: center;
+}
+
+.buttonDislike{
+    display: flex;
+    align-items: center; 
+}
+
+#createComment{
+    border-top: 1px solid grey;
+    margin: 2rem 0;
+}
+
+#createCommentSide{
+    width: 80%;
+    margin: 0 auto;
+}
+
+#sectionComment{
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 3rem;
+}
+
+/* Style the message container */
+#messages {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+/* Style individual messages */
+.message {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.commentUser{
+    display: flex;
+    
+}
+
+.commentUsername{
+    margin-right: 1rem;
+    height: max-content;
+    width: 10%;
+}
+
+.commentUserMessage{
+    width: 90%;
+    height: max-content;
+    border: 1px solid black;
+}
+
+pre {
+    overflow-x: auto; /* Ajoute une barre de défilement horizontale si nécessaire */
+    white-space: pre-wrap; /* Permet aux mots longs de se rompre et d'occuper plusieurs lignes si nécessaire */
+    padding: 1rem;
+  }
+
+/* Style the "Add a Comment" section */
+h2 {
+    font-size: 20px;
+    margin-top: 20px;
+}
+
+form {
+    margin-top: 10px;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+}
+
+input[type="submit"] {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #3498db;
+}
+
+/* Style the message content for better visibility */
+.message strong {
+    font-weight: bold;
+    color: #007bff; /* Change the color to a blue shade */
+    display: block; /* Move "Message:" to a new line */
+    margin-bottom: 5px; /* Add some space below "Message:" */
+}
+
+.message p {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9; /* Add a light gray background color */
+    margin-top: 5px; /* Add some space above the message content */
+    margin-bottom: 0; /* Remove the default bottom margin */
+}

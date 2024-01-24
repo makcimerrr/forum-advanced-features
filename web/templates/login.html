@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/sign_up.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire login</title>
+</head>
+
+<body>
+    <header>
+        <div class="navHeader">
+            <div class="logoHome">
+                <a href="/">Home</a>
+            </div>
+            <div>
+                <a>Guest</a>
+            </div>
+            <div>
+                <a href="/logOrSign">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="title">
+            <h2>log-in</h2>
+        </div>
+        <div>
+            <form method="post" action="/log_in">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="loginemail" name="loginemail" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="loginpassword" name="loginpassword" required>
+                </div>
+                <div id="formError">
+                    {{range .}}
+                    <h5>{{.}}</h5>
+                    {{end}}
+                </div>
+                <div class="form-group">
+                    <button type="submit">Send</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="buttonExterneRegistre">
+            <div id="buttonFB">
+                <button>
+                    <a href="/login/facebook">
+                        <span class="fa fa-facebook"></span> Sign in with Facebook
+                    </a>
+                </button>
+            </div>
+            <div id="buttonGit">
+                <button>
+                    <a href="/login/github">
+                        <span class="fa fa-github"></span> Sign in with Github
+                    </a>
+                </button>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

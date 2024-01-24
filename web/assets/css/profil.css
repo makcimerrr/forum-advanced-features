@@ -1,0 +1,120 @@
+/* Style pour le corps de la page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+*{
+    text-decoration: none;
+}
+
+h1{
+    text-align: center;
+    margin: 3rem 0;
+}
+
+#mainSide{
+    width: 80%;
+    margin: 0 auto;
+}
+
+.sousSectionProfil{
+border: 2px solid black;
+margin-bottom: 3rem;
+padding: 1rem;
+background-color: white;
+}
+
+.sousSectionProfil a {
+    color: black;
+}
+
+.sousSectionProfil a:hover {
+    color: blue;
+}
+
+.souSouSectionProfil{
+    display: flex;
+
+    border: 1px solid gray;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.souSouSectionProfil div{
+    display: flex;
+}
+
+.title{
+    width: 10%;
+}
+
+.title h4{
+    margin-right: 0.5rem;
+}
+
+.username{
+    width: 15%;
+}
+
+.username h4{
+    margin-right: 0.5rem;
+}
+
+.category{
+    width: 25%;
+}
+
+.category h4{
+    margin-right: 0.5rem;
+}
+
+.message{
+    width: 35%;
+}
+
+.message h4{
+    margin-right: 0.5rem;
+}
+
+.nbLike{
+    width: 5%;
+}
+
+.nbLike h4{
+    margin-right: 0.5rem;
+}
+
+.nbDislike{
+    width: 5%;
+}
+
+.nbDislike h4{
+    margin-right: 0.5rem;
+}
+
+.nbComment{
+    width: 5%;
+}
+
+.nbComment h4{
+    margin-right: 0.5rem;
+}
+
+.usernameComment{
+    width: 20%;
+}
+
+.usernameComment h4{
+    margin-right: 0.5rem;
+}
+
+.messageComment{
+    width: 70%;
+}
+
+.messageComment h4{
+    margin-right: 0.5rem;
+}
+
+

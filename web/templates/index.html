@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum</title>
+</head>
+
+<body>
+
+    {{if .Username}}
+    <header>
+        <div class="navHeader">
+            <div class="logoHome">
+                <a href="/">Home</a>
+            </div>
+            <div>
+                <a>Welcome {{.Username}}</a>
+            </div>
+            <div>
+                <a href="/profil">Profil</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </header>
+    {{else}}
+    <header>
+        <div class="navHeader">
+            <div class="logoHome">
+                <a href="/">Home</a>
+            </div>
+            <div>
+                <a>Guest</a>
+            </div>
+            <div>
+                <a href="/logOrSign">Login</a>
+            </div>
+        </div>
+    </header>
+    {{end}}
+
+    <main>
+        <section id="sectionDiscussion">
+            <div id="sectionDiscussionSide">
+
+
+                <div id="leftPage">
+
+                    <!-- Bouton pour écrire une discussion -->
+                    <div id="buttonNewDiscussion">
+                        <a href="/create_discussion" class="boutonaddpost">Create New Discussion</a>
+                    </div>
+
+
+                    <div id="formCategory">
+                        <form action="/" method="POST">
+
+                            <div id="categoryChoose">
+                                <div>
+                                    <label for="category">Category: </label>
+                                </div>
+                                <div id="checkboxCategory">
+                                    {{range .Categories}}
+                                    <div>
+                                        <input type="checkbox" id="{{.Category}}" name="categories" value="{{.ID}}" />
+                                        <label for="{{.Category}}">{{.Category}}</label>
+                                    </div>
+                                    {{end}}
+                                </div>
+
+                                <!-- Ajoutez d'autres options de catégorie ici -->
+
+                            </div>
+                            <div id="buttonSubmitCategory">
+                                <input type="submit" value="Submit">
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="buttonNewDiscussion">
+                        <a href="/" class="boutonaddpost">show all</a>
+                    </div>
+
+
+                </div>
+
+                <div id="rightPage">
+                    <h1>Discussions: {{.CategoryTitle}}</h1>
+
+
+                    <div class="discussion-list">
+                        <!-- Boucle pour afficher les discussions avec des liens -->
+
+                        {{if not .Discussions}}
+                        <h2>There is no Discussion</h2>
+                        {{else}}
+                        {{range .Discussions}}
+                        <a href="/discussion/{{.ID}}">
+                            <div class="discussion">
+                                <div class="infoDiscussion">
+                                    <div class="titleDiscussion">
+                                        <h2>{{.Title}}</h2>
+                                    </div>
+                                    <div class="infoByDiscussion">
+                                        <h4><strong>Category:</strong> {{.Category}}</h4>
+                                        <h4><strong>Creates by:</strong> {{.Username}}</h4>
+                                    </div>
+                                </div>
+
+                                <div class="messageDiscussion">
+                                    <pre><strong>Message:</strong> {{.Message}}</pre>
+                                </div>
+                        </a>
+                        <!-- Ajoutez un formulaire pour la case à cocher -->
+                        <div class="likeDislikeDiscission">
+                            <div class="buttonLike">
+                                <form action="/like/{{.ID}}" method="post">
+                                    <input type="checkbox" name="like" value="{{.ID}}" {{if .Liked}}checked{{end}}
+                                        disabled>
+                                    <input type="hidden" name="whereLike" value="discussion">
+                                    {{range $.CategoryTitle}}
+                                    <input type="hidden" name="lien" value="{{.}}" />
+                                    {{end}}
+                                    <input type="hidden" name="id" value="{{.ID}}" />
+                                    <input type="submit" value="👍Like {{.NumberLike}}">
+                                </form>
+                            </div>
+                            <div class="buttonDislike">
+                                <form action="/dislike/{{.ID}}" method="post">
+                                    <input type="checkbox" name="dislike" value="{{.ID}}" {{if .Disliked}}checked{{end}}
+                                        disabled>
+                                    <input type="hidden" name="whereDislike" value="discussion">
+                                    {{range $.CategoryTitle}}
+                                    <input type="hidden" name="lien" value="{{.}}" />
+                                    {{end}}
+                                    <input type="hidden" name="id" value="{{.ID}}" />
+                                    <input type="submit" value="👎Dislike {{.NumberDislike}}">
+                                </form>
+                            </div>
+                            <div>
+                                <p>comment: {{.NumberComment}}</p>
+                            </div>
+                        </div>
+
+                    </div>
+                    {{end}}
+                    {{end}}
+
+                </div>
+            </div>
+        </section>
+
+
+
+
+    </main>
+</body>
+
+</html>

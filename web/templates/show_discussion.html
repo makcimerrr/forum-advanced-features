@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/show_discussion.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+    <title>Discussion Details</title>
+    <!-- <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            var filterElement = document.querySelector('#filter');
+            if (!filterElement || filterElement.textContent.trim() === "") {
+                filterElement.style.display = 'none';
+            }
+        });
+    </script> -->
+</head>
+
+<body>
+    {{if .Username}}
+    <header>
+        <div class="navHeader">
+            <div class="logoHome">
+                <a href="/">Home</a>
+            </div>
+            <div>
+                <a>Welcome {{.Username}}</a>
+            </div>
+
+            <div>
+                <a href="/profil">Profil</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </header>
+    {{else}}
+    <header>
+        <div class="navHeader">
+            <div class="logoHome">
+                <a href="/">Home</a>
+            </div>
+            <div>
+                <a>Guest</a>
+            </div>
+            <div>
+                <a href="/logOrSign">Login</a>
+            </div>
+        </div>
+    </header>
+    {{end}}
+
+
+    <main>
+        <section id="sectionPost">
+            <div id="sectionPostSide">
+                <div id="thePost">
+                    <div>
+                        <h4>Category: {{ .Discussion.Category}}</h4>
+                    </div>
+                    <div>
+                        <H1>{{.Discussion.Title}}</H1>
+                    </div>
+                    <div>
+                        <h4>by: {{.Discussion.Username}}</h4>
+                    </div>
+                </div>
+                <div id="message">
+                    <div>
+                        <pre>{{.Discussion.Message}}</pre>
+                    </div>
+                </div>
+                <div id="likeDislikePost">
+                    <div class="buttonLike">
+                        <form action="/like/{{.Discussion.ID}}" method="post">
+                            <input type="checkbox" name="like" value="{{.Discussion.ID}}"
+                                {{if .Discussion.Liked}}checked{{end}} disabled>
+                            <input type="hidden" name="id" value="{{.Discussion.ID}}" />
+                            <input type="hidden" name="lien" value="discussion" />
+                            <input type="hidden" name="whereLike" value="discussion">
+                            <input type="submit" value="👍Like {{.Discussion.NumberLike}}">
+                        </form>
+                    </div>
+                    <div class="buttonDislike">
+                        <form action="/dislike/{{.Discussion.ID}}" method="post">
+                            <input type="checkbox" name="dislike" value="{{.Discussion.ID}}"
+                                {{if .Discussion.Disliked}}checked{{end}} disabled>
+                            <input type="hidden" name="id" value="{{.Discussion.ID}}" />
+                            <input type="hidden" name="lien" value="discussion" />
+                            <input type="hidden" name="whereDislike" value="discussion">
+                            <input type="submit" value="👎Dislike {{.Discussion.NumberDislike}}">
+                        </form>
+                    </div>
+                </div>
+                <div id="createComment">
+                    <div id="createCommentSide">
+                        <div>
+                            <h2>Add a Comment</h2>
+                        </div>
+                        <div>
+                            <form action="/add_message/{{.Discussion.ID}}" method="POST">
+                                <textarea name="message" rows="4" cols="50" required></textarea>
+                                <input type="submit" value="Add Comment">
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="sectionComment">
+            <div id="sectionCommentSide">
+                <div id="messages">
+                    <div>
+                        <h3>Comment ({{.Discussion.NumberComment}})</h3>
+                    </div>
+                    <!-- Les messages seront affichés ici -->
+                    {{range .Comments}}
+                    <div class="message">
+                        <div class="commentUser">
+                            <div class="commentUsername">
+                                <p>{{.Username}}</p>
+                            </div>
+                            <div class="commentUserMessage">
+                                <pre>{{.Message}}</pre>
+                            </div>
+                        </div>
+                        <div>
+                            <!-- Bouton like pour aimer les commentaires -->
+                            <form action="/like/{{$.Discussion.ID}}" method="post">
+                                <input type="checkbox" name="like" value="{{.ID}}" {{if .Liked}}checked{{end}} disabled>
+                                <input type="hidden" name="id" value="{{.ID}}" />
+                                <input type="hidden" name="discussionID" value="{{$.Discussion.ID}}">
+                                <input type="hidden" name="whereLike" value="comment">
+                                <input type="submit" value="👍Like {{.NumberLike}}">
+                            </form>
+                        </div>
+                        <div>
+                            <!-- Bouton like pour aimer les commentaires -->
+                            <form action="/dislike/{{$.Discussion.ID}}" method="post">
+                                <input type="checkbox" name="dislike" value="{{.ID}}" {{if .Disliked}}checked{{end}}
+                                    disabled>
+                                <input type="hidden" name="id" value="{{.ID}}" />
+                                <input type="hidden" name="discussionID" value="{{$.Discussion.ID}}">
+                                <input type="hidden" name="whereDislike" value="comment">
+                                <input type="submit" value="👎Dislike {{.NumberDislike}}">
+                            </form>
+                        </div>
+
+
+                    </div>
+                    {{end}}
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+
+</body>
+
+</html>

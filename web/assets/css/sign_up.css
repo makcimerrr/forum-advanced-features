@@ -1,0 +1,104 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 50%;
+    margin: 0 auto;
+    margin-top: 3rem;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#title h2 {
+    text-align: center;
+}
+
+.container input {
+    width: 100%;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-group button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-group button:hover {
+    background-color: #45a049;
+}
+
+#buttonExterneRegistre {
+    display: flex;
+    justify-content: center;
+}
+
+#buttonGit {
+    width: 30%;
+}
+
+#buttonGit button {
+    padding: 1rem;
+    background-color: white;
+}
+
+#buttonGit a {
+    color: black;
+}
+
+#buttonGit button:hover {
+    padding: 1rem;
+    background-color: black;
+}
+
+#buttonGit button:hover a {
+    color: white;
+}
+
+#buttonFB {
+    width: 30%;
+}
+
+#buttonFB button {
+    padding: 1rem;
+    background-color: white;
+}
+
+#buttonFB a {
+    color: blue;
+}
+
+#buttonFB button:hover {
+    padding: 1rem;
+    background-color: blue;
+}
+
+#buttonFB button:hover a {
+    color: white;
+}

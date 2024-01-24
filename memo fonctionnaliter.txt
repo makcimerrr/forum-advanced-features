@@ -1,0 +1,17 @@
+crée une table notif avec: 
+image cloche + nb
+
+idUser | idPost | idComment | TypeNotif | bool-Vu
+
+
+
+voir que si le usercookie n'existe pas supprimer le cookie
+
+
+add:
+edit post/comment
+delete post/comment
+
+
+
+
