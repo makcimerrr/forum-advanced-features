@@ -75,5 +75,15 @@ func GetAllCommentForOneUser(db *sql.DB, idUser int) ([]Comment, error){
 	return comments, nil
 }
 
+func DeleteCommentFromID(db *sql.DB, commentID int) error{
+	_, err := db.Exec("DELETE FROM comment WHERE id = ?", commentID)
+	return err
+}
+
+func DeleteCommentFromDiscussion(db *sql.DB, discussionIDInt int) error {
+	_, err := db.Exec("DELETE FROM comment WHERE discussion_id = ?", discussionIDInt)
+	return err
+}
+
 
 

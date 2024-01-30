@@ -6,14 +6,6 @@
     <link rel="stylesheet" href="/static/css/show_discussion.css">
     <link rel="stylesheet" href="/static/css/header.css">
     <title>Discussion Details</title>
-    <!-- <script>
-        window.addEventListener('DOMContentLoaded', function () {
-            var filterElement = document.querySelector('#filter');
-            if (!filterElement || filterElement.textContent.trim() === "") {
-                filterElement.style.display = 'none';
-            }
-        });
-    </script> -->
 </head>
 
 <body>
@@ -90,6 +82,22 @@
                             <input type="submit" value="👎Dislike {{.Discussion.NumberDislike}}">
                         </form>
                     </div>
+                    {{if eq .Discussion.Username $.Username}}
+                    <div>
+                        <form action="/create_discussion" method="post">
+                            <input type="hidden" name="whereDislike" value="discussion">
+                            <input type="hidden" name="id" value="{{.Discussion.ID}}" />
+                            <input type="hidden" name="type" value="edit" />
+                            <input type="submit" value="edit">
+                        </form>
+                    </div>
+                    <div>
+                        <form action="/deletePost" method="post">
+                            <input type="hidden" name="id" value="{{.Discussion.ID}}" />
+                            <input type="submit" value="delete">
+                        </form>
+                    </div>
+                    {{end}}
                 </div>
                 <div id="createComment">
                     <div id="createCommentSide">
@@ -145,6 +153,23 @@
                                 <input type="submit" value="👎Dislike {{.NumberDislike}}">
                             </form>
                         </div>
+                        {{if eq .Username $.Username}}
+                        <div>
+                            <form action="/create_discussion" method="post">
+                                <input type="hidden" name="whereDislike" value="discussion">
+                                <input type="hidden" name="id" value="{{.ID}}" />
+                                <input type="hidden" name="type" value="edit" />
+                                <input type="submit" value="edit">
+                            </form>
+                        </div>
+                        <div>
+                            <form action="/deleteComment" method="post">
+                                <input type="hidden" name="id" value="{{.ID}}" />
+                                <input type="submit" value="delete">
+                            </form>
+                        </div>
+                        {{end}}
+
 
 
                     </div>

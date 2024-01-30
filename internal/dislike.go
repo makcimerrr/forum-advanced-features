@@ -139,6 +139,12 @@ func DislikeComment(w http.ResponseWriter, r *http.Request) {
 	id = r.PostFormValue("id")
 	discussionId = r.PostFormValue("discussionID")
 
+
+	discussionIdInt, err := strconv.Atoi(discussionId)
+	if err != nil {
+		http.Error(w, "Invalid discussion ID", http.StatusBadRequest)
+		return
+	}
 	commentID, err := strconv.Atoi(id)
 	if err != nil {
 		http.Error(w, "Invalid discussion ID", http.StatusBadRequest)
@@ -184,7 +190,7 @@ func DislikeComment(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Ajoutez un like
-		err = api.SetDislikeComment(db, commentID, idUser)
+		err = api.SetDislikeComment(db, discussionIdInt, commentID, idUser)
 		if err != nil {
 			http.Error(w, "Internal Server Error set like", http.StatusInternalServerError)
 			return

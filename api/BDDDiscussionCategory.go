@@ -65,3 +65,8 @@ func CheckIfDiscussionCategoryOk(db *sql.DB, category_id int, discussionID int) 
 
 	return exists, nil
 }
+
+func DeleteDiscussionCategoryFromDiscussion(db *sql.DB, discussionIDInt int) error {
+	_, err := db.Exec("DELETE FROM discussion_category WHERE discussion_id = ?", discussionIDInt)
+	return err
+}

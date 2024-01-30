@@ -29,7 +29,7 @@ func init() {
 	}
 }
 
-func Jsp(){
+func Jsp() {
 	key := "Secret-session-key" // Replace with your SESSION_SECRET or similar
 	maxAge := 86400 * 30        // 30 days
 	isProd := false             // Set to true when serving over https
@@ -98,7 +98,7 @@ func generateSessionToken() (string, error) {
 	return base64.URLEncoding.EncodeToString(token), nil
 }
 
-// isSessionValid vérifie si le token de session dans les cookies correspond à celui dans la base de données
+/* // isSessionValid vérifie si le token de session dans les cookies correspond à celui dans la base de données
 func isSessionValid(w http.ResponseWriter, r *http.Request) (bool, string) {
 	// Obtenez le jeton de session à partir des cookies
 	sessionCookie, err := r.Cookie("session")
@@ -137,7 +137,7 @@ func isSessionValid(w http.ResponseWriter, r *http.Request) (bool, string) {
 	fmt.Println("Session Token:", sessionToken)
 
 	return sessionToken == dbSessionToken, "You have been disconnected"
-}
+} */
 
 func clearSessionCookies(w http.ResponseWriter) {
 	// Créer un cookie avec une date d'expiration antérieure pour effacer le cookie
@@ -216,10 +216,10 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	//delete session_user
 
 	db, err := api.OpenBDD()
-		if err != nil {
-			http.Error(w, "Internal Server Error open BDD", http.StatusInternalServerError)
-			return
-		}
+	if err != nil {
+		http.Error(w, "Internal Server Error open BDD", http.StatusInternalServerError)
+		return
+	}
 
 	err = api.DeleteTokenSession(db, username)
 	if err != nil {
@@ -252,20 +252,20 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func supprimerDoublons(tableau []int) []int {
-    tableauSansDoublons := make([]int, 0)
-    tableauMap := make(map[int]bool)
+	tableauSansDoublons := make([]int, 0)
+	tableauMap := make(map[int]bool)
 
-    for _, valeur := range tableau {
-        if _, existe := tableauMap[valeur]; !existe {
-            tableauSansDoublons = append(tableauSansDoublons, valeur)
-            tableauMap[valeur] = true
-        }
-    }
+	for _, valeur := range tableau {
+		if _, existe := tableauMap[valeur]; !existe {
+			tableauSansDoublons = append(tableauSansDoublons, valeur)
+			tableauMap[valeur] = true
+		}
+	}
 
-    return tableauSansDoublons
+	return tableauSansDoublons
 }
 
-//fonction permettant d'ajouter un commentaire a un post et se redirige vers ce post
+// fonction permettant d'ajouter un commentaire a un post et se redirige vers ce post
 func AddMessage(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		// Récupérez l'ID de la discussion à partir de l'URL
@@ -316,4 +316,93 @@ func AddMessage(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
+func DeletePost(w http.ResponseWriter, r *http.Request) {
 
+	id := r.PostFormValue("id")
+
+	discussionIDInt, _ := strconv.Atoi(id)
+
+	db, err := api.OpenBDD()
+	if err != nil {
+		http.Error(w, "Internal Server Error open BDD", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.DeleteDiscussion(db, discussionIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error delete token", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.DeleteLikeFromDiscussion(db, discussionIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error delete token", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.DeleteDislikeFromDiscussion(db, discussionIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error delete token", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.DeleteCommentFromDiscussion(db, discussionIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error delete token", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.DeleteLikeCommentFromDiscussion(db, discussionIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error delete token", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.DeleteDislikeCommentFromDiscussion(db, discussionIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error delete token", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.DeleteDiscussionCategoryFromDiscussion(db, discussionIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error delete token", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func DeleteComment(w http.ResponseWriter, r *http.Request) {
+
+	id := r.PostFormValue("id")
+
+	commentIDInt, _ := strconv.Atoi(id)
+
+	db, err := api.OpenBDD()
+	if err != nil {
+		http.Error(w, "Internal Server Error open BDD", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.DeleteCommentFromID(db, commentIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error delete token", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.DeleteLikeCommentFromID(db, commentIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error delete token", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.DeleteDislikeCommentFromID(db, commentIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error delete token", http.StatusInternalServerError)
+		return
+	}
+
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}

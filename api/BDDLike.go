@@ -66,6 +66,12 @@ func GetDiscussionIdByLikeForOneUser(db *sql.DB, idUser int) ([]int, error) {
 	return  tempId, err
 }
 
+func DeleteLikeFromDiscussion(db *sql.DB, discussionIDInt int) error {
+	_, err := db.Exec("DELETE FROM likeDiscussion WHERE discussion_id = ?", discussionIDInt)
+	return err
+}
+
+
 
 //function for table like Comment
 
@@ -75,8 +81,8 @@ func GetLikesFromOneComment(db *sql.DB, commentId int, username int)(bool, error
 	return liked, err
 }
 
-func SetLikesComment(db *sql.DB, commentId int, username int) (error){
-	_, err := db.Exec("INSERT INTO likeComment (comment_id, user_id) VALUES (?, ?)", commentId, username)
+func SetLikesComment(db *sql.DB, discussionID int, commentId int, username int) (error){
+	_, err := db.Exec("INSERT INTO likeComment (discussion_id, comment_id, user_id) VALUES (?, ?, ?)", discussionID, commentId, username)
 	return err
 }
 
@@ -126,4 +132,14 @@ func GetCommentIdByLikeForOneUser(db *sql.DB, idUser int) ([]int, error) {
     }
 
 	return  tempId, err
+}
+
+func DeleteLikeCommentFromID(db *sql.DB, commentId int) error{
+	_, err := db.Exec("DELETE FROM likeComment WHERE comment_id = ?", commentId)
+	return err
+}
+
+func DeleteLikeCommentFromDiscussion(db *sql.DB, discussionIDInt int) error {
+	_, err := db.Exec("DELETE FROM likeComment WHERE discussion_id = ?", discussionIDInt)
+	return err
 }

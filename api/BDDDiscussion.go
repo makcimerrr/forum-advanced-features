@@ -38,7 +38,10 @@ func SetDiscussion(db *sql.DB, idUser int, title string, message string) error {
 	return err
 }
 
-func DeleteDiscussion() {}
+func DeleteDiscussion(db *sql.DB, discussionIDInt int) error {
+	_, err := db.Exec("DELETE FROM discussion WHERE id = ?", discussionIDInt)
+	return err
+}
 
 func GetAllDiscussionsForOneUser(db *sql.DB, idUser int) ([]Discussion, error) {
 	// Exécutez une requête SQL pour récupérer toutes les discussions

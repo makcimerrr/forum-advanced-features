@@ -2,7 +2,6 @@ package forum
 
 import (
 	"database/sql"
-	"fmt"
 	"forum/api"
 	"net/http"
 	"strconv"
@@ -12,7 +11,6 @@ func WhereIsTheLike(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 
 		whereLike := r.PostFormValue("whereLike")
-		fmt.Println(whereLike)
 
 		if whereLike == "discussion" {
 			LikeDiscussion(w, r)
@@ -136,6 +134,12 @@ func LikeComment(w http.ResponseWriter, r *http.Request) {
 	id = r.PostFormValue("id")
 	discussionId = r.PostFormValue("discussionID")
 
+	discussionIdInt, err := strconv.Atoi(discussionId)
+	if err != nil {
+		http.Error(w, "Invalid discussion ID", http.StatusBadRequest)
+		return
+	}
+
 	commentID, err := strconv.Atoi(id)
 	if err != nil {
 		http.Error(w, "Invalid discussion ID", http.StatusBadRequest)
@@ -181,7 +185,7 @@ func LikeComment(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Ajoutez un like
-		err = api.SetLikesComment(db, commentID, idUser)
+		err = api.SetLikesComment(db, discussionIdInt, commentID, idUser)
 		if err != nil {
 			http.Error(w, "Internal Server Error set like", http.StatusInternalServerError)
 			return

@@ -153,6 +153,7 @@ func CreateBDD() {
 	createTable = `
 				CREATE TABLE IF NOT EXISTS  "likeComment" (
 					"id"	INTEGER NOT NULL UNIQUE,
+					"discussion_id"	INTEGER NOT NULL,
 					"comment_id"	INTEGER NOT NULL,
 					"user_id"	INTEGER NOT NULL,
 					PRIMARY KEY("id" AUTOINCREMENT),
@@ -170,6 +171,7 @@ func CreateBDD() {
 	createTable = `
 				CREATE TABLE IF NOT EXISTS  "dislikeComment" (
 					"id"	INTEGER NOT NULL UNIQUE,
+					"discussion_id"	INTEGER NOT NULL,
 					"comment_id"	INTEGER NOT NULL,
 					"user_id"	INTEGER NOT NULL,
 					PRIMARY KEY("id" AUTOINCREMENT),

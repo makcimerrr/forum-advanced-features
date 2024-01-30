@@ -49,6 +49,9 @@ func main() {
 	http.HandleFunc("/logout", forum.Logout)
 	http.HandleFunc("/like/", forum.WhereIsTheLike)
 	http.HandleFunc("/dislike/", forum.WhereIsTheDislike)
+	http.HandleFunc("/deletePost", forum.DeletePost)
+	http.HandleFunc("/deleteComment", forum.DeleteComment)
+	
 
 	// Définir le dossier "static" comme dossier de fichiers statiques
 	fs := http.FileServer(http.Dir("./web/assets"))

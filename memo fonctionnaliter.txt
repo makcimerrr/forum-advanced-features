@@ -3,15 +3,13 @@ image cloche + nb
 
 idUser | idPost | idComment | TypeNotif | bool-Vu
 
-voir que si le usercookie n'existe pas supprimer le cookie
+edit:   post
+        comment
 
-add:
-edit post/comment
-delete post/comment
-
-mention que le post/comment a été edit:
-bdd -> post/comment bool-edit               ok
-html ajoute message
+        pour l'edit creer new html *2
+delete: 
+        post    OK
+        comment  OK                   
 
 
 
