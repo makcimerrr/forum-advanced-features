@@ -5,7 +5,7 @@ redirection page notif
 idUser | idPost | idComment | TypeNotif | bool-Vu
 
 edit:   post ok
-        comment
+        comment ok
 delete: 
         post    OK
         comment  OK                   

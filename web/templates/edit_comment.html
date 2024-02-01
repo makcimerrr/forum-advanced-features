@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/static/css/write_discussion.css">
+    <link rel="stylesheet" href="/static/css/header.css">
+    <title>edit a Discussion</title>
+</head>
+
+<body>
+    {{if .Username}}
+    <header>
+        <div class="navHeader">
+            <div class="logoHome">
+                <a href="/">Home</a>
+            </div>
+            <div>
+                <a>Welcome {{.Username}}</a>
+            </div>
+            <div>
+                <a href="/profil">Profil</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </header>
+    {{else}}
+    <header>
+        <div class="navHeader">
+            <div class="logoHome">
+                <a href="/">Home</a>
+            </div>
+            <div>
+                <a>Guest</a>
+            </div>
+            <div>
+                <a href="/logOrSign">Login</a>
+            </div>
+        </div>
+    </header>
+    {{end}}
+
+    <main>
+        <div class="container">
+            <div id="title">
+                <h1>Edit a Comment</h1>
+            </div>
+            <div>
+                <form action="/editComment" method="post">
+                    <div id="messageForDiscussion">
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" required>{{.Message}}</textarea>
+                    </div>
+                    <div>
+                        <input type="hidden" name="id" value="{{.ID}}" />
+                        <input type="hidden" name="discussionID" value="{{.DiscussionID}}" />
+                        <input type="submit" value="edit Discussion">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

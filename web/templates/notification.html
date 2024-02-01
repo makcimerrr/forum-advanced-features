@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/header.css">
+    <link rel="stylesheet" href="/static/css/profil.css">
+
+    <title>Profil</title>
+</head>
+
+<body>
+    {{if .Username}}
+    <header>
+        <div class="navHeader">
+            <div class="logoHome">
+                <a href="/">Home</a>
+            </div>
+            <div>
+                <a>Welcome {{.Username}}</a>
+            </div>
+            <div>
+                <a href="/profil">Profil</a>
+                <a href="/logout">Logout</a>
+            </div>
+        </div>
+    </header>
+    {{else}}
+    <header>
+        <div class="navHeader">
+            <div class="logoHome">
+                <a href="/">Home</a>
+            </div>
+            <div>
+                <a>Guest</a>
+            </div>
+            <div>
+                <a href="/logOrSign">Login</a>
+            </div>
+        </div>
+    </header>
+    {{end}}
+    <main>
+        <div id="mainSide">
+
+
+            <div>
+                <h1>Notification</h1>
+            </div>
+
+            <section class="sectionProfil">
+                <div class="sousSectionProfil">
+                    {{if not .DiscussionsCreated}}
+                    <h2>You've no Notification</h2>
+                    {{else}}
+                    {{range .DiscussionsCreated}}
+                    <a href="/discussion/{{.ID}}">
+                        <div class="souSouSectionProfil">
+                            <div class="username">
+                                <h4>Username:</h4>
+                                <p>{{.Username}}</p>
+                            </div>
+                            <div class="message">
+                                <h4>message:</h4>
+                                <p>{{.Message}}</p>
+                            </div>
+                            <div class="nbLike">
+                                <h4>👍</h4>
+                                <p>{{.NumberLike}}</p>
+                            </div>
+                            <div class="nbDislike">
+                                <h4>👎</h4>
+                                <p>{{.NumberDislike}}</p>
+                            </div>
+                            <div class="nbComment">
+                                <h4>💬</h4>
+                                <p>{{.NumberComment}}</p>
+                            </div>
+                        </div>
+                        {{end}}
+                        {{end}}
+                    </a>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+
+</html>

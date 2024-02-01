@@ -11,6 +11,25 @@ func SetComments(db *sql.DB, discussionIDInt int, message string, idUser int) er
 	return err
 }
 
+func EditComment(db *sql.DB, message string, id int) error {
+	// Update statement
+	updateQuery := "UPDATE comment SET message = ? WHERE id = ?"
+
+	// Prepare the statement
+	stmt, err := db.Prepare(updateQuery)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	// Execute the update
+	_, err = stmt.Exec(message, id)
+	if err != nil {
+		return err
+	}
+	return err
+}
+
 func GetCommentsFromDiscussion(db *sql.DB, discussionIDInt int)([]Comment, error){
 	rows, err := db.Query("SELECT comment.id, user.username AS users, comment.message FROM comment JOIN user ON comment.user_id = user.id WHERE discussion_id = ?", discussionIDInt)
 	if err != nil {

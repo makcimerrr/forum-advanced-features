@@ -462,6 +462,56 @@ func EditDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func EditCommentHandler(w http.ResponseWriter, r *http.Request) {
+	// Obtenez le nom d'utilisateur à partir du cookie "username"
+	usernameCookie, err := r.Cookie("username")
+	if err != nil {
+		// Gérer l'erreur ici, par exemple, en redirigeant l'utilisateur vers une page de connexion s'il n'est pas connecté.
+		http.Redirect(w, r, "/log_in", http.StatusSeeOther)
+		return
+	}
+	username := usernameCookie.Value
+
+	if r.Method == http.MethodPost {
+		discussionId := r.FormValue("discussionID")
+		discussionIdInt, _ := strconv.Atoi(discussionId)
+		commentId := r.FormValue("id")
+		commentIdInt, _ := strconv.Atoi(commentId)
+
+		db, err := api.OpenBDD()
+		if err != nil {
+			http.Error(w, "Internal Server Error Open BDD", http.StatusInternalServerError)
+			return
+		}
+
+		comment, err := api.GetOneCommentById(db, commentIdInt)
+		if err != nil {
+			http.Error(w, "Internal Server Error get one discussion for edit", http.StatusInternalServerError)
+			return
+		}
+
+		data := struct {
+			Username     string
+			DiscussionID int
+			ID           int
+			Message      string
+		}{
+			Username:     username,
+			DiscussionID: discussionIdInt,
+			ID:           comment.ID,
+			Message:      comment.Message,
+		}
+
+		tmpl := template.Must(template.ParseFiles("./web/templates/edit_comment.html"))
+		err = tmpl.Execute(w, data)
+		if err != nil {
+			http.Error(w, "Internal Server Error vers show discussion", http.StatusInternalServerError)
+			return
+		}
+		return
+	}
+}
+
 func ShowDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Vérifiez la validité de la session

@@ -41,6 +41,7 @@ func main() {
 	http.HandleFunc("/sign_up", forum.SignUpHandler)
 	http.HandleFunc("/create_discussion", forum.CreateDiscussionHandler)
 	http.HandleFunc("/edit_discussion", forum.EditDiscussionHandler)
+	http.HandleFunc("/edit_comment", forum.EditCommentHandler)
 	http.HandleFunc("/discussion/", forum.ShowDiscussionHandler)
 	http.HandleFunc("/profil", forum.ProfilHandler)
 	
@@ -51,6 +52,7 @@ func main() {
 	http.HandleFunc("/like/", forum.WhereIsTheLike)
 	http.HandleFunc("/dislike/", forum.WhereIsTheDislike)
 	http.HandleFunc("/editPost", forum.EditPost)
+	http.HandleFunc("/editComment", forum.EditComment)
 	http.HandleFunc("/deletePost", forum.DeletePost)
 	http.HandleFunc("/deleteComment", forum.DeleteComment)
 	

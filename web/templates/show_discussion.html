@@ -153,7 +153,7 @@
                         </div>
                         {{if eq .Username $.Username}}
                         <div>
-                            <form action="" method="post">
+                            <form action="/edit_comment" method="post">
                                 <input type="hidden" name="id" value="{{.ID}}" />
                                 <input type="hidden" name="discussionID" value="{{$.Discussion.ID}}">
                                 <input type="submit" value="edit">
