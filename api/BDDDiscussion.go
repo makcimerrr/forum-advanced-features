@@ -38,6 +38,25 @@ func SetDiscussion(db *sql.DB, idUser int, title string, message string) error {
 	return err
 }
 
+func EditDiscussion(db *sql.DB, title string, message string, id int) error {
+	// Update statement
+	updateQuery := "UPDATE discussion SET title = ?, message = ? WHERE id = ?"
+
+	// Prepare the statement
+	stmt, err := db.Prepare(updateQuery)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	// Execute the update
+	_, err = stmt.Exec(title, message, id)
+	if err != nil {
+		return err
+	}
+	return err
+}
+
 func DeleteDiscussion(db *sql.DB, discussionIDInt int) error {
 	_, err := db.Exec("DELETE FROM discussion WHERE id = ?", discussionIDInt)
 	return err

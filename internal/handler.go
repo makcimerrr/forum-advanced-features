@@ -11,7 +11,7 @@ import (
 )
 
 func HandleNotFound(w http.ResponseWriter, r *http.Request) {
-	
+
 	tmpl := template.Must(template.ParseFiles("./web/templates/404.html"))
 	err := tmpl.Execute(w, nil)
 	if err != nil {
@@ -41,13 +41,13 @@ func HandleBadRequest(w http.ResponseWriter, r *http.Request) {
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Vérifiez la validité de la session
-    /* validSession, errMsg := isSessionValid(w, r)
-    if !validSession {
-        clearSessionCookies(w)
-        // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
-        http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
-        return
-    } */
+	/* validSession, errMsg := isSessionValid(w, r)
+	   if !validSession {
+	       clearSessionCookies(w)
+	       // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
+	       http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
+	       return
+	   } */
 
 	// Récupérer l'URL de la requête
 	url := r.URL.Path
@@ -275,13 +275,13 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 func CreateDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Vérifiez la validité de la session
-    /* validSession, errMsg := isSessionValid(w, r)
-    if !validSession {
-        clearSessionCookies(w)
-        // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
-        http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
-        return
-    } */
+	/* validSession, errMsg := isSessionValid(w, r)
+	   if !validSession {
+	       clearSessionCookies(w)
+	       // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
+	       http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
+	       return
+	   } */
 
 	// Obtenez le nom d'utilisateur à partir du cookie "username"
 	usernameCookie, err := r.Cookie("username")
@@ -414,17 +414,64 @@ func CreateDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func EditDiscussionHandler(w http.ResponseWriter, r *http.Request) {
+	// Obtenez le nom d'utilisateur à partir du cookie "username"
+	usernameCookie, err := r.Cookie("username")
+	if err != nil {
+		// Gérer l'erreur ici, par exemple, en redirigeant l'utilisateur vers une page de connexion s'il n'est pas connecté.
+		http.Redirect(w, r, "/log_in", http.StatusSeeOther)
+		return
+	}
+	username := usernameCookie.Value
+
+	if r.Method == http.MethodPost {
+		discussionId := r.FormValue("id")
+		discussionIdInt, _ := strconv.Atoi(discussionId)
+
+		db, err := api.OpenBDD()
+		if err != nil {
+			http.Error(w, "Internal Server Error Open BDD", http.StatusInternalServerError)
+			return
+		}
+
+		discussion, err := api.GetOneDiscussions(db, discussionIdInt)
+		if err != nil {
+			http.Error(w, "Internal Server Error get one discussion for edit", http.StatusInternalServerError)
+			return
+		}
+
+		data := struct {
+			Username string
+			ID       int
+			Title    string
+			Message  string
+		}{
+			Username: username,
+			ID:       discussionIdInt,
+			Title:    discussion.Title,
+			Message:  discussion.Message,
+		}
+
+		tmpl := template.Must(template.ParseFiles("./web/templates/edit_discussion.html"))
+		err = tmpl.Execute(w, data)
+		if err != nil {
+			http.Error(w, "Internal Server Error vers show discussion", http.StatusInternalServerError)
+			return
+		}
+		return
+	}
+}
+
 func ShowDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Vérifiez la validité de la session
-    /* validSession, errMsg := isSessionValid(w, r)
-    if !validSession {
-        clearSessionCookies(w)
-        // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
-        http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
-        return
-    } */
-
+	/* validSession, errMsg := isSessionValid(w, r)
+	   if !validSession {
+	       clearSessionCookies(w)
+	       // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
+	       http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
+	       return
+	   } */
 
 	// Récupérer le nom d'utilisateur à partir du cookie "username"
 	usernameCookie, err := r.Cookie("username")
@@ -655,13 +702,13 @@ func ShowDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 func LogOrSignHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Vérifiez la validité de la session
-    /* validSession, errMsg := isSessionValid(w, r)
-    if !validSession {
-        clearSessionCookies(w)
-        // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
-        http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
-        return
-    } */
+	/* validSession, errMsg := isSessionValid(w, r)
+	   if !validSession {
+	       clearSessionCookies(w)
+	       // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
+	       http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
+	       return
+	   } */
 
 	tmpl := template.Must(template.ParseFiles("./web/templates/logOrSign.html"))
 	err := tmpl.Execute(w, nil)
@@ -674,13 +721,13 @@ func LogOrSignHandler(w http.ResponseWriter, r *http.Request) {
 func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Vérifiez la validité de la session
-    /* validSession, errMsg := isSessionValid(w, r)
-    if !validSession {
-        clearSessionCookies(w)
-        // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
-        http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
-        return
-    } */
+	/* validSession, errMsg := isSessionValid(w, r)
+	   if !validSession {
+	       clearSessionCookies(w)
+	       // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
+	       http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
+	       return
+	   } */
 
 	var formError []string
 
@@ -743,13 +790,13 @@ func SignUpHandler(w http.ResponseWriter, r *http.Request) {
 func LogInHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Vérifiez la validité de la session
-    /* validSession, errMsg := isSessionValid(w, r)
-    if !validSession {
-        clearSessionCookies(w)
-        // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
-        http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
-        return
-    } */
+	/* validSession, errMsg := isSessionValid(w, r)
+	   if !validSession {
+	       clearSessionCookies(w)
+	       // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
+	       http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
+	       return
+	   } */
 
 	var formError []string
 
@@ -803,14 +850,13 @@ func LogInHandler(w http.ResponseWriter, r *http.Request) {
 func ProfilHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Vérifiez la validité de la session
-    /* validSession, errMsg := isSessionValid(w, r)
-    if !validSession {
-        clearSessionCookies(w)
-        // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
-        http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
-        return
-    } */
-
+	/* validSession, errMsg := isSessionValid(w, r)
+	   if !validSession {
+	       clearSessionCookies(w)
+	       // La session n'est pas valide, redirigez l'utilisateur vers la page de connexion ou effectuez d'autres actions
+	       http.Redirect(w, r, "/log_in?error="+url.QueryEscape(errMsg), http.StatusSeeOther)
+	       return
+	   } */
 
 	// Obtenez le nom d'utilisateur à partir du cookie "username"
 	usernameCookie, err := r.Cookie("username")
@@ -1081,5 +1127,3 @@ func ProfilHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-

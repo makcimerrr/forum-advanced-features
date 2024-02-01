@@ -316,6 +316,31 @@ func AddMessage(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
+func EditPost(w http.ResponseWriter, r *http.Request) {
+
+	id := r.PostFormValue("id")
+	title := r.PostFormValue("title")
+	message := r.PostFormValue("message")
+
+	discussionIDInt, _ := strconv.Atoi(id)
+
+	db, err := api.OpenBDD()
+	if err != nil {
+		http.Error(w, "Internal Server Error open BDD", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.EditDiscussion(db, title, message, discussionIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error open BDD", http.StatusInternalServerError)
+		return
+	}
+
+	// Redirigez l'utilisateur vers la page de la discussion
+	http.Redirect(w, r, fmt.Sprintf("/discussion/%d", discussionIDInt), http.StatusSeeOther)
+
+}
+
 func DeletePost(w http.ResponseWriter, r *http.Request) {
 
 	id := r.PostFormValue("id")

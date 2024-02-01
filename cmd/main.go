@@ -40,6 +40,7 @@ func main() {
 	http.HandleFunc("/log_in", forum.LogInHandler)
 	http.HandleFunc("/sign_up", forum.SignUpHandler)
 	http.HandleFunc("/create_discussion", forum.CreateDiscussionHandler)
+	http.HandleFunc("/edit_discussion", forum.EditDiscussionHandler)
 	http.HandleFunc("/discussion/", forum.ShowDiscussionHandler)
 	http.HandleFunc("/profil", forum.ProfilHandler)
 	
@@ -49,6 +50,7 @@ func main() {
 	http.HandleFunc("/logout", forum.Logout)
 	http.HandleFunc("/like/", forum.WhereIsTheLike)
 	http.HandleFunc("/dislike/", forum.WhereIsTheDislike)
+	http.HandleFunc("/editPost", forum.EditPost)
 	http.HandleFunc("/deletePost", forum.DeletePost)
 	http.HandleFunc("/deleteComment", forum.DeleteComment)
 	

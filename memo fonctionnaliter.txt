@@ -1,12 +1,11 @@
 crée une table notif avec: 
 image cloche + nb
+redirection page notif
 
 idUser | idPost | idComment | TypeNotif | bool-Vu
 
-edit:   post
+edit:   post ok
         comment
-
-        pour l'edit creer new html *2
 delete: 
         post    OK
         comment  OK                   

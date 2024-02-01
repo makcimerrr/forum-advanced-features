@@ -84,10 +84,8 @@
                     </div>
                     {{if eq .Discussion.Username $.Username}}
                     <div>
-                        <form action="/create_discussion" method="post">
-                            <input type="hidden" name="whereDislike" value="discussion">
+                        <form action="/edit_discussion" method="post">
                             <input type="hidden" name="id" value="{{.Discussion.ID}}" />
-                            <input type="hidden" name="type" value="edit" />
                             <input type="submit" value="edit">
                         </form>
                     </div>
@@ -155,10 +153,9 @@
                         </div>
                         {{if eq .Username $.Username}}
                         <div>
-                            <form action="/create_discussion" method="post">
-                                <input type="hidden" name="whereDislike" value="discussion">
+                            <form action="" method="post">
                                 <input type="hidden" name="id" value="{{.ID}}" />
-                                <input type="hidden" name="type" value="edit" />
+                                <input type="hidden" name="discussionID" value="{{$.Discussion.ID}}">
                                 <input type="submit" value="edit">
                             </form>
                         </div>

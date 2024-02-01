@@ -143,13 +143,8 @@
                             </div>
                             {{if eq .Username $.Username}}
                                 <div>
-                                    <form action="/create_discussion" method="post">
-                                        <input type="hidden" name="whereDislike" value="discussion">
-                                        {{range $.CategoryTitle}}
-                                        <input type="hidden" name="lien" value="{{.}}" />
-                                        {{end}}
+                                    <form action="/edit_discussion" method="post">
                                         <input type="hidden" name="id" value="{{.ID}}" />
-                                        <input type="hidden" name="type" value="edit" />
                                         <input type="submit" value="edit">
                                     </form>
                                 </div>

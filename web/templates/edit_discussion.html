@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/static/css/write_discussion.css">
     <link rel="stylesheet" href="/static/css/header.css">
-    <title>Write a Discussion</title>
+    <title>edit a Discussion</title>
 </head>
 
 <body>
@@ -43,10 +43,10 @@
     <main>
         <div class="container">
             <div id="title">
-                <h1>Write a Discussion</h1>
+                <h1>Edit a Discussion</h1>
             </div>
             <div>
-                <form action="/create_discussion" method="post">
+                <form action="/editPost" method="post">
                     <div id="titleForDiscussion">
                         <label for="title">Title:</label>
                         <input type="text" id="title" name="title" value="{{.Title}}" required>
@@ -55,30 +55,10 @@
                         <label for="message">Message:</label>
                         <textarea id="message" name="message" required>{{.Message}}</textarea>
                     </div>
-                    <div id="categoryChoose">
-                        <div>
-                            <label for="category">Category: </label>
-                        </div>
-                        <div id="checkboxCategory">
-                            {{range .Category}}
-                            <div>
-                                <input type="checkbox" id="{{.Category}}" name="categories" value="{{.ID}}" />
-                                <label for="{{.Category}}">{{.Category}}</label>
-                            </div>
-                            {{end}}
-                        </div>
-
-                        <!-- Ajoutez d'autres options de catégorie ici -->
-
-                    </div>
                     <div>
-                        <input type="submit" value="Create Discussion">
+                        <input type="hidden" name="id" value="{{.ID}}" />
+                        <input type="submit" value="edit Discussion">
                     </div>
-                    <div id="messageError">
-                        <h2>{{.Error}}</h2>
-                    </div>
-
-
                 </form>
             </div>
         </div>
