@@ -5,9 +5,9 @@ import (
 	"fmt"
 )
 
-func GetNotificationByIdUserAndVu(db *sql.DB, userId int)([]Notification, error){
+func GetNotificationByIdUserAndVu(db *sql.DB, userIDCreateur int)([]Notification, error){
 	// Exécutez une requête SQL pour récupérer toutes les discussions
-	rows, err := db.Query("SELECT * FROM notification WHERE user_id = ? AND vu = 0", userId)
+	rows, err := db.Query("SELECT * FROM notification WHERE userIDCreateur = ? AND user_id != ? AND vu = 0", userIDCreateur, userIDCreateur)
 	if err != nil {
 		return nil, err
 	}
@@ -19,7 +19,7 @@ func GetNotificationByIdUserAndVu(db *sql.DB, userId int)([]Notification, error)
 	// Parcourez les résultats et stockez-les dans la slice
 	for rows.Next() {
 		var notification Notification
-		err := rows.Scan(&notification.ID, &notification.User_id, &notification.Discussion_id, &notification.Message, &notification.vu)
+		err := rows.Scan(&notification.ID, &notification.UserIDCreateur, &notification.User_id, &notification.Discussion_id, &notification.Message, &notification.vu)
 		if err != nil {
 			return nil, err
 		}
@@ -28,9 +28,9 @@ func GetNotificationByIdUserAndVu(db *sql.DB, userId int)([]Notification, error)
 	return notifications, nil
 }
 
-func GetNumberNotificationById(db *sql.DB, userId int) (int, error) {
+func GetNumberNotificationById(db *sql.DB, userIDCreateur int) (int, error) {
 	var notificationCount int
-	err := db.QueryRow("SELECT COUNT(*) FROM notification WHERE user_id = ? And vu = 0", userId).Scan(&notificationCount)
+	err := db.QueryRow("SELECT COUNT(*) FROM notification WHERE userIDCreateur = ? And user_id != ? AND vu = 0", userIDCreateur, userIDCreateur).Scan(&notificationCount)
 	if err != nil {
 		return 0, err
 	}
@@ -38,8 +38,8 @@ func GetNumberNotificationById(db *sql.DB, userId int) (int, error) {
 	return notificationCount, nil
 }
 
-func SetNotification(db *sql.DB, userId int, discussionId int, message string) error {
-	_, err := db.Exec("INSERT INTO notification (discussion_id, user_id, message) VALUES (?, ?, ?)", discussionId, userId, message)
+func SetNotification(db *sql.DB, userIDCreateur int, userId int, discussionId int, message string) error {
+	_, err := db.Exec("INSERT INTO notification (userIDCreateur, discussion_id, user_id, message) VALUES (?, ?, ?, ?)",userIDCreateur, discussionId, userId, message)
 
 	return err
 }
@@ -68,4 +68,9 @@ func CheckIfNotificationNotDouble(db *sql.DB, userId int, discussionId int, mess
     err := db.QueryRow("SELECT 1 FROM notification WHERE user_id = ? AND discussion_id = ? AND message = ?", userId, discussionId, message).Scan(&notif)
 	fmt.Println("test", err)
     return notif, err
+}
+
+func DeleteNotificationFromDiscussion(db *sql.DB, discussionId int) error{
+	_, err := db.Exec("DELETE FROM notification WHERE discussion_id = ?", discussionId)
+	return err
 }

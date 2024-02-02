@@ -43,6 +43,29 @@ func CheckNumberOfDislikesForDiscussion(db *sql.DB, discussionID int) (int, erro
 	return likeCount, nil
 }
 
+func GetDiscussionIdByDislikeForOneUser(db *sql.DB, idUser int) ([]int, error) {
+	var tempId []int
+	rows, err := db.Query("SELECT discussion_id FROM dislikeDiscussion WHERE user_id = ?", idUser)
+	if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+	for rows.Next() {
+        var id int
+        if err := rows.Scan(&id); err != nil {
+            return nil, err
+        }
+        tempId = append(tempId, id)
+    }
+
+    if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+	return  tempId, err
+}
+
 func DeleteDislikeFromDiscussion(db *sql.DB, discussionIDInt int) error {
 	_, err := db.Exec("DELETE FROM dislikeDiscussion WHERE discussion_id = ?", discussionIDInt)
 	return err

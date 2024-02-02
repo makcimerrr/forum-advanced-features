@@ -32,6 +32,7 @@ type Categories struct {
 
 type Notification struct {
 	ID int
+	UserIDCreateur int
 	User_id int
 	Discussion_id int
 	Message string

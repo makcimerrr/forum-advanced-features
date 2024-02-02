@@ -86,10 +86,28 @@ func DislikeDiscussion(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		if notif {
+		var discussion api.Discussion
+
+		discussion, err = api.GetOneDiscussions(db, discussionIDInt)
+		if err != nil && err != sql.ErrNoRows {
+			http.Error(w, "Internal Server Error get like", http.StatusInternalServerError)
+			return
+		}
+
+		userCreateur := discussion.Username
+
+		//recupérer l'id de l'utilisateur
+		userIDCreateur, err := api.GetUserByUsername(db, userCreateur)
+		if err != nil {
+			http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
+			return
+		}
+
+		if notif && userIDCreateur != idUser {
 
 		} else {
-			err = api.SetNotification(db, idUser, discussionIDInt, messageNotif)
+
+			err = api.SetNotification(db, userIDCreateur, idUser, discussionIDInt, messageNotif)
 			if err != nil {
 				http.Error(w, "Internal Server Error set notif", http.StatusInternalServerError)
 				return

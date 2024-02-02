@@ -204,13 +204,15 @@ func CreateBDD() {
 	createTable = `
 	CREATE TABLE IF NOT EXISTS "notification" (
 		"id"	INTEGER NOT NULL UNIQUE,
+		"userIDCreateur"	INTEGER NOT NULL,
 		"user_id"	INTEGER NOT NULL,
 		"discussion_id"	INTEGER NOT NULL,
 		"message"	TEXT NOT NULL,
 		"vu"	INTEGER NOT NULL DEFAULT 0,
-		FOREIGN KEY("discussion_id") REFERENCES "discussion"("id"),
+		PRIMARY KEY("id" AUTOINCREMENT),
 		FOREIGN KEY("user_id") REFERENCES "user"("id"),
-		PRIMARY KEY("id" AUTOINCREMENT)
+		FOREIGN KEY("discussion_id") REFERENCES "discussion"("id"),
+		FOREIGN KEY("userIDCreateur") REFERENCES "user"("id")
 	)`
 	_, err = db.Exec(createTable)
 	if err != nil {

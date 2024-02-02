@@ -2,6 +2,7 @@ package forum
 
 import (
 	"crypto/rand"
+	"database/sql"
 	"encoding/base64"
 	"fmt"
 	"forum/api"
@@ -301,7 +302,24 @@ func AddMessage(w http.ResponseWriter, r *http.Request) {
 
 		messageNotif := "Une personne a commenter votre post" 
 
-		err = api.SetNotification(db, idUser, discussionIDInt, messageNotif)
+		var discussion api.Discussion
+
+		discussion, err = api.GetOneDiscussions(db, discussionIDInt)
+		if err != nil && err != sql.ErrNoRows {
+			http.Error(w, "Internal Server Error get like", http.StatusInternalServerError)
+			return
+		}
+
+		userCreateur := discussion.Username
+
+		//recupérer l'id de l'utilisateur
+		userIDCreateur, err := api.GetUserByUsername(db, userCreateur)
+		if err != nil {
+			http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
+			return
+		}
+
+		err = api.SetNotification(db, userIDCreateur, idUser, discussionIDInt, messageNotif)
 		if err != nil {
 			http.Error(w, "Internal Server Error set notif", http.StatusInternalServerError)
 			return
@@ -426,6 +444,12 @@ func DeletePost(w http.ResponseWriter, r *http.Request) {
 	err = api.DeleteDiscussionCategoryFromDiscussion(db, discussionIDInt)
 	if err != nil {
 		http.Error(w, "Internal Server Error delete token", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.DeleteNotificationFromDiscussion(db, discussionIDInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error delete notification", http.StatusInternalServerError)
 		return
 	}
 

@@ -108,7 +108,7 @@
                     <h2>You've written no comment</h2>
                     {{else}}
                     {{range .CommentCreated}}
-                    <a href="/discussion/{{.ID}}">
+                    <a href="/discussion/{{.Discussion_id}}">
                         <div class="souSouSectionProfil">
                             <div class="usernameComment">
                                 <h4>Username:</h4>
@@ -141,6 +141,52 @@
                     <h2>You haven't liked any discussions</h2>
                     {{else}}
                     {{range .DiscussionsLiked}}
+                    <a href="/discussion/{{.ID}}">
+                        <div class="souSouSectionProfil">
+                            <div class="title">
+                                <h4>titre:</h4>
+                                <p>{{.Title}}</p>
+                            </div>
+                            <div class="category">
+                                <h4>categories:</h4>
+                                <p>
+                                    {{range .Category}}
+                                    {{.}},
+                                    {{end}}
+                                </p>
+                            </div>
+                            <div class="message">
+                                <h4>message:</h4>
+                                <p>{{.Message}}</p>
+                            </div>
+                            <div class="nbLike">
+                                <h4>👍</h4>
+                                <p>{{.NumberLike}}</p>
+                            </div>
+                            <div class="nbDislike">
+                                <h4>👎</h4>
+                                <p>{{.NumberDislike}}</p>
+                            </div>
+                            <div class="nbComment">
+                                <h4>💬</h4>
+                                <p>{{.NumberComment}}</p>
+                            </div>
+                        </div>
+                        {{end}}
+                        {{end}}
+                    </a>
+                </div>
+
+            </section>
+            <section class="sectionProfil">
+                <div>
+                    <h2>DiscussionDisliked: </h2>
+                </div>
+                <div class="sousSectionProfil">
+                    {{if not .DiscussionsDisliked}}
+                    <h2>You haven't disliked any discussions</h2>
+                    {{else}}
+                    {{range .DiscussionsDisliked}}
                     <a href="/discussion/{{.ID}}">
                         <div class="souSouSectionProfil">
                             <div class="title">

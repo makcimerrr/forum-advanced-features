@@ -1,10 +1,12 @@
 package forum
 
 import (
+	"database/sql"
 	"fmt"
 	"forum/api"
 	"html/template"
 	"net/http"
+
 	//"net/url"
 	"strconv"
 	"strings"
@@ -251,28 +253,50 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		discussions[i].Category = categories
 	}
 
-	idUser, err := api.GetUserByUsername(db, username)
-	if err != nil {
-		http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
-		return
+	if username != "" {
+
+		idUser, err := api.GetUserByUsername(db, username)
+		if err != nil {
+			http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
+			return
+		}
+
+		numberNotification, err := api.GetNumberNotificationById(db, idUser)
+		if err != nil {
+			http.Error(w, "Internal Server Error get number notification", http.StatusInternalServerError)
+			return
+		}
+
+		data := struct {
+			Username       string
+			NbNotification int
+			Discussions    []api.Discussion
+			Categories     []api.Categories
+			CategoryTitle  []string
+		}{
+			Username:       username,
+			NbNotification: numberNotification,
+			Discussions:    discussions,
+			Categories:     categories,
+			CategoryTitle:  categoryTitle,
+		}
+		tmpl := template.Must(template.ParseFiles("./web/templates/index.html"))
+		err = tmpl.Execute(w, data)
+		if err != nil {
+			http.Error(w, "Internal Server Error template index", http.StatusInternalServerError)
+			return
+		}
 	}
 
-	numberNotification, err := api.GetNumberNotificationById(db, idUser)
-	if err != nil {
-		http.Error(w, "Internal Server Error get number notification", http.StatusInternalServerError)
-		return
-	}
 
 	// Créer une structure de données pour passer les informations au modèle
 	data := struct {
 		Username       string
-		NbNotification int
 		Discussions    []api.Discussion
 		Categories     []api.Categories
 		CategoryTitle  []string
 	}{
 		Username:       username,
-		NbNotification: numberNotification,
 		Discussions:    discussions,
 		Categories:     categories,
 		CategoryTitle:  categoryTitle,
@@ -435,19 +459,19 @@ func CreateDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		data := struct {
-			Username string
+			Username       string
 			NbNotification int
-			Category []api.Categories
-			Error    string
-			Title    string
-			Message  string
+			Category       []api.Categories
+			Error          string
+			Title          string
+			Message        string
 		}{
-			Username: username,
+			Username:       username,
 			NbNotification: numberNotification,
-			Category: category,
-			Error:    "",
-			Title:    "",
-			Message:  "",
+			Category:       category,
+			Error:          "",
+			Title:          "",
+			Message:        "",
 		}
 
 		// Affichez la page pour écrire une discussion (write_discussion.html) avec le menu déroulant
@@ -1192,7 +1216,77 @@ func ProfilHandler(w http.ResponseWriter, r *http.Request) {
 			categories = append(categories, value)
 		}
 
-		discussionsCreated[i].Category = categories
+		discussionsLiked[i].Category = categories
+
+	}
+
+	var discussionsDisliked []api.Discussion
+
+	var tempDislikesId []int
+	//recupérer les id de discussion où utilisater a liker
+	tempDislikesId, err = api.GetDiscussionIdByDislikeForOneUser(db, idUser)
+	if err != nil {
+		http.Error(w, "Internal Server Error der id Discussion by like for ine user", http.StatusInternalServerError)
+		return
+	}
+
+	//recupérer les discussion en grace au id
+	var discussionDisliked api.Discussion
+	for i := 0; i < len(tempDislikesId); i++ {
+		discussionDisliked, err = api.GetOneDiscussions(db, tempDislikesId[i])
+		fmt.Println(err)
+		if err != nil {
+			http.Error(w, "Internal Server Error get one discussion for like", http.StatusInternalServerError)
+			return
+		}
+		discussionsDisliked = append(discussionsDisliked, discussionDisliked)
+	}
+
+	for i := range discussionsDisliked {
+
+		// Pour chaque discussion, vérifiez si l'utilisateur l'a aimée
+		numberLike, err := api.CheckNumberOfLikesForDiscussion(db, discussionsDisliked[i].ID)
+		if err != nil {
+			http.Error(w, "Internal Server Error check number of like", http.StatusInternalServerError)
+			return
+		}
+
+		discussionsDisliked[i].NumberLike = numberLike
+
+		numberDislike, err := api.CheckNumberOfDislikesForDiscussion(db, discussionsDisliked[i].ID)
+		if err != nil {
+			http.Error(w, "Internal Server Error check number of dislike", http.StatusInternalServerError)
+			return
+		}
+
+		discussionsDisliked[i].NumberDislike = numberDislike
+
+		numberComment, err := api.CheckNumberOfCommentForDiscussion(db, discussionsDisliked[i].ID)
+		if err != nil {
+			http.Error(w, "Internal Server Error check number of comment", http.StatusInternalServerError)
+			return
+		}
+
+		discussionsDisliked[i].NumberComment = numberComment
+
+		categoriesID, err := api.GetCategoryIDByDiscussionID(db, discussionsDisliked[i].ID)
+		if err != nil {
+			http.Error(w, "Error fetching get id category", http.StatusInternalServerError)
+			return
+		}
+
+		var categories []string
+		for i := 0; i < len(categoriesID); i++ {
+			value, err := api.GetCategoryByID(db, categoriesID[i])
+			if err != nil {
+				http.Error(w, "Error fetching get category", http.StatusInternalServerError)
+				return
+			}
+
+			categories = append(categories, value)
+		}
+
+		discussionsDisliked[i].Category = categories
 
 	}
 
@@ -1254,12 +1348,13 @@ func ProfilHandler(w http.ResponseWriter, r *http.Request) {
 		CommentLiked        []api.Comment
 		CommentDisliked     []api.Comment
 	}{
-		Username:           username,
-		NbNotification:     numberNotification,
-		DiscussionsCreated: discussionsCreated,
-		DiscussionsLiked:   discussionsLiked,
-		CommentCreated:     commentCreated,
-		CommentLiked:       commentLiked,
+		Username:            username,
+		NbNotification:      numberNotification,
+		DiscussionsCreated:  discussionsCreated,
+		DiscussionsDisliked: discussionsDisliked,
+		DiscussionsLiked:    discussionsLiked,
+		CommentCreated:      commentCreated,
+		CommentLiked:        commentLiked,
 	}
 
 	tmpl := template.Must(template.ParseFiles("./web/templates/profil.html"))
@@ -1295,8 +1390,8 @@ func NotificationHandler(w http.ResponseWriter, r *http.Request) {
 	var notification []api.Notification
 
 	notification, err = api.GetNotificationByIdUserAndVu(db, idUser)
-	if err != nil {
-		http.Error(w, "Internal Server Error get all notif", http.StatusInternalServerError)
+	if err != nil && err != sql.ErrNoRows {
+		http.Error(w, "Internal Server Error get notif", http.StatusInternalServerError)
 		return
 	}
 
