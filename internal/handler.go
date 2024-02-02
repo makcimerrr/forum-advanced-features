@@ -251,17 +251,31 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 		discussions[i].Category = categories
 	}
 
+	idUser, err := api.GetUserByUsername(db, username)
+	if err != nil {
+		http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
+		return
+	}
+
+	numberNotification, err := api.GetNumberNotificationById(db, idUser)
+	if err != nil {
+		http.Error(w, "Internal Server Error get number notification", http.StatusInternalServerError)
+		return
+	}
+
 	// Créer une structure de données pour passer les informations au modèle
 	data := struct {
-		Username      string
-		Discussions   []api.Discussion
-		Categories    []api.Categories
-		CategoryTitle []string
+		Username       string
+		NbNotification int
+		Discussions    []api.Discussion
+		Categories     []api.Categories
+		CategoryTitle  []string
 	}{
-		Username:      username,
-		Discussions:   discussions,
-		Categories:    categories,
-		CategoryTitle: categoryTitle,
+		Username:       username,
+		NbNotification: numberNotification,
+		Discussions:    discussions,
+		Categories:     categories,
+		CategoryTitle:  categoryTitle,
 	}
 
 	tmpl := template.Must(template.ParseFiles("./web/templates/index.html"))
@@ -312,18 +326,32 @@ func CreateDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
+			idUser, err := api.GetUserByUsername(db, username)
+			if err != nil {
+				http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
+				return
+			}
+
+			numberNotification, err := api.GetNumberNotificationById(db, idUser)
+			if err != nil {
+				http.Error(w, "Internal Server Error get number notification", http.StatusInternalServerError)
+				return
+			}
+
 			data := struct {
-				Username string
-				Category []api.Categories
-				Error    string
-				Title    string
-				Message  string
+				Username       string
+				NbNotification int
+				Category       []api.Categories
+				Error          string
+				Title          string
+				Message        string
 			}{
-				Username: username,
-				Category: category,
-				Error:    errors,
-				Title:    title,
-				Message:  message,
+				Username:       username,
+				NbNotification: numberNotification,
+				Category:       category,
+				Error:          errors,
+				Title:          title,
+				Message:        message,
 			}
 
 			// Affichez la page pour écrire une discussion (write_discussion.html) avec le menu déroulant
@@ -394,14 +422,28 @@ func CreateDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		idUser, err := api.GetUserByUsername(db, username)
+		if err != nil {
+			http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
+			return
+		}
+
+		numberNotification, err := api.GetNumberNotificationById(db, idUser)
+		if err != nil {
+			http.Error(w, "Internal Server Error get number notification", http.StatusInternalServerError)
+			return
+		}
+
 		data := struct {
 			Username string
+			NbNotification int
 			Category []api.Categories
 			Error    string
 			Title    string
 			Message  string
 		}{
 			Username: username,
+			NbNotification: numberNotification,
 			Category: category,
 			Error:    "",
 			Title:    "",
@@ -440,16 +482,30 @@ func EditDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		idUser, err := api.GetUserByUsername(db, username)
+		if err != nil {
+			http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
+			return
+		}
+
+		numberNotification, err := api.GetNumberNotificationById(db, idUser)
+		if err != nil {
+			http.Error(w, "Internal Server Error get number notification", http.StatusInternalServerError)
+			return
+		}
+
 		data := struct {
-			Username string
-			ID       int
-			Title    string
-			Message  string
+			Username       string
+			NbNotification int
+			ID             int
+			Title          string
+			Message        string
 		}{
-			Username: username,
-			ID:       discussionIdInt,
-			Title:    discussion.Title,
-			Message:  discussion.Message,
+			Username:       username,
+			NbNotification: numberNotification,
+			ID:             discussionIdInt,
+			Title:          discussion.Title,
+			Message:        discussion.Message,
 		}
 
 		tmpl := template.Must(template.ParseFiles("./web/templates/edit_discussion.html"))
@@ -490,16 +546,30 @@ func EditCommentHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		idUser, err := api.GetUserByUsername(db, username)
+		if err != nil {
+			http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
+			return
+		}
+
+		numberNotification, err := api.GetNumberNotificationById(db, idUser)
+		if err != nil {
+			http.Error(w, "Internal Server Error get number notification", http.StatusInternalServerError)
+			return
+		}
+
 		data := struct {
-			Username     string
-			DiscussionID int
-			ID           int
-			Message      string
+			Username       string
+			NbNotification int
+			DiscussionID   int
+			ID             int
+			Message        string
 		}{
-			Username:     username,
-			DiscussionID: discussionIdInt,
-			ID:           comment.ID,
-			Message:      comment.Message,
+			Username:       username,
+			NbNotification: numberNotification,
+			DiscussionID:   discussionIdInt,
+			ID:             comment.ID,
+			Message:        comment.Message,
 		}
 
 		tmpl := template.Must(template.ParseFiles("./web/templates/edit_comment.html"))
@@ -712,17 +782,31 @@ func ShowDiscussionHandler(w http.ResponseWriter, r *http.Request) {
 			comment[i].NumberDislike = numberDislike
 
 		}
+
+	}
+	idUser, err := api.GetUserByUsername(db, username)
+	if err != nil {
+		http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
+		return
+	}
+
+	numberNotification, err := api.GetNumberNotificationById(db, idUser)
+	if err != nil {
+		http.Error(w, "Internal Server Error get number notification", http.StatusInternalServerError)
+		return
 	}
 
 	// Créez une structure de données pour stocker les détails de la discussion et les commentaires
 	data := struct {
-		Username   string
-		Discussion api.Discussion
-		Comments   []api.Comment
+		Username       string
+		NbNotification int
+		Discussion     api.Discussion
+		Comments       []api.Comment
 	}{
-		Username:   username,
-		Discussion: discussions,
-		Comments:   comment,
+		Username:       username,
+		NbNotification: numberNotification,
+		Discussion:     discussions,
+		Comments:       comment,
 	}
 
 	/* 	var filter sql.NullString
@@ -1153,9 +1237,16 @@ func ProfilHandler(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+	numberNotification, err := api.GetNumberNotificationById(db, idUser)
+	if err != nil {
+		http.Error(w, "Internal Server Error get number notification", http.StatusInternalServerError)
+		return
+	}
+
 	// Créer une structure de données pour passer les informations au modèle
 	data := struct {
 		Username            string
+		NbNotification      int
 		DiscussionsCreated  []api.Discussion
 		DiscussionsLiked    []api.Discussion
 		DiscussionsDisliked []api.Discussion
@@ -1164,6 +1255,7 @@ func ProfilHandler(w http.ResponseWriter, r *http.Request) {
 		CommentDisliked     []api.Comment
 	}{
 		Username:           username,
+		NbNotification:     numberNotification,
 		DiscussionsCreated: discussionsCreated,
 		DiscussionsLiked:   discussionsLiked,
 		CommentCreated:     commentCreated,
@@ -1171,6 +1263,61 @@ func ProfilHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	tmpl := template.Must(template.ParseFiles("./web/templates/profil.html"))
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		http.Error(w, "Internal Server Error template index", http.StatusInternalServerError)
+		return
+	}
+}
+
+func NotificationHandler(w http.ResponseWriter, r *http.Request) {
+	// Obtenez le nom d'utilisateur à partir du cookie "username"
+	usernameCookie, err := r.Cookie("username")
+	if err != nil {
+		// Gérer l'erreur ici, par exemple, en redirigeant l'utilisateur vers une page de connexion s'il n'est pas connecté.
+		http.Redirect(w, r, "/log_in", http.StatusSeeOther)
+		return
+	}
+	username := usernameCookie.Value
+
+	db, err := api.OpenBDD()
+	if err != nil {
+		http.Error(w, "Internal Server Error Open BDD", http.StatusInternalServerError)
+		return
+	}
+
+	idUser, err := api.GetUserByUsername(db, username)
+	if err != nil {
+		http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
+		return
+	}
+
+	var notification []api.Notification
+
+	notification, err = api.GetNotificationByIdUserAndVu(db, idUser)
+	if err != nil {
+		http.Error(w, "Internal Server Error get all notif", http.StatusInternalServerError)
+		return
+	}
+
+	numberNotification, err := api.GetNumberNotificationById(db, idUser)
+	if err != nil {
+		http.Error(w, "Internal Server Error get number notification", http.StatusInternalServerError)
+		return
+	}
+
+	// Créer une structure de données pour passer les informations au modèle
+	data := struct {
+		Username       string
+		NbNotification int
+		Notification   []api.Notification
+	}{
+		Username:       username,
+		NbNotification: numberNotification,
+		Notification:   notification,
+	}
+
+	tmpl := template.Must(template.ParseFiles("./web/templates/notification.html"))
 	err = tmpl.Execute(w, data)
 	if err != nil {
 		http.Error(w, "Internal Server Error template index", http.StatusInternalServerError)

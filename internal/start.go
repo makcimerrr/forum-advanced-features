@@ -299,6 +299,14 @@ func AddMessage(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		messageNotif := "Une personne a commenter votre post" 
+
+		err = api.SetNotification(db, idUser, discussionIDInt, messageNotif)
+		if err != nil {
+			http.Error(w, "Internal Server Error set notif", http.StatusInternalServerError)
+			return
+		}
+
 		err = api.SetComments(db, discussionIDInt, message, idUser)
 		if err != nil {
 			log.Printf("Erreur lors de l'insertion du message : %v", err)
@@ -456,4 +464,31 @@ func DeleteComment(w http.ResponseWriter, r *http.Request) {
 
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func SetNotifVu(w http.ResponseWriter, r *http.Request)  {
+	
+	// Récupérer les valeurs des paramètres de l'URL
+	queryParams := r.URL.Query()
+
+	// Récupérer la valeur d'un paramètre spécifique
+	id := queryParams.Get("id")
+	discussionId := queryParams.Get("discussionId")
+
+	discussionIdInt, _ := strconv.Atoi(discussionId)
+	idInt, _ := strconv.Atoi(id)
+
+	db, err := api.OpenBDD()
+	if err != nil {
+		http.Error(w, "Internal Server Error open BDD", http.StatusInternalServerError)
+		return
+	}
+
+	err = api.UpdateNotificationTrue(db, idInt)
+	if err != nil {
+		http.Error(w, "Internal Server Error update notif", http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, fmt.Sprintf("/discussion/%d", discussionIdInt), http.StatusSeeOther)
 }

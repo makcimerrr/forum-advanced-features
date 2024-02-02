@@ -7,7 +7,6 @@ import (
 	"strconv"
 )
 
-
 func WhereIsTheDislike(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 
@@ -27,108 +26,124 @@ func WhereIsTheDislike(w http.ResponseWriter, r *http.Request) {
 }
 
 func DislikeDiscussion(w http.ResponseWriter, r *http.Request) {
-	
-		var lien []string
-		var id string
 
-		id = r.PostFormValue("id")
-		lien = r.Form["lien"]
+	var lien []string
+	var id string
 
+	id = r.PostFormValue("id")
+	lien = r.Form["lien"]
 
-		discussionIDInt, err := strconv.Atoi(id)
+	discussionIDInt, err := strconv.Atoi(id)
+	if err != nil {
+		http.Error(w, "Invalid discussion ID", http.StatusBadRequest)
+		return
+	}
+
+	// Obtenez le nom d'utilisateur à partir du cookie "username"
+	usernameCookie, err := r.Cookie("username")
+	if err != nil {
+		// Gérez l'erreur, par exemple, en redirigeant l'utilisateur vers une page de connexion s'il n'est pas connecté.
+		http.Redirect(w, r, "/log_in", http.StatusSeeOther)
+		return
+	}
+	username := usernameCookie.Value
+
+	db, err := api.OpenBDD()
+	if err != nil {
+		http.Error(w, "Internal Server Error open BDD", http.StatusInternalServerError)
+		return
+	}
+
+	//recupérer l'id de l'utilisateur
+	idUser, err := api.GetUserByUsername(db, username)
+	if err != nil {
+		http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
+		return
+	}
+
+	// Vérifiez si l'utilisateur a déjà disliké cette discussion
+
+	disliked, err := api.GetDislikesFromOneDiscussion(db, discussionIDInt, idUser)
+	if err != nil && err != sql.ErrNoRows {
+		http.Error(w, "Internal Server Error get dislike from discussion", http.StatusInternalServerError)
+		return
+	}
+
+	if disliked {
+		// Si l'utilisateur a déjà disliké la discussion, supprimez le dislike
+		err = api.DeleteDislikeByUserIdForDiscussion(db, discussionIDInt, idUser)
 		if err != nil {
-			http.Error(w, "Invalid discussion ID", http.StatusBadRequest)
+			http.Error(w, "Internal Server Error delete dislike by user id for discussion", http.StatusInternalServerError)
 			return
 		}
+	} else {
 
-		// Obtenez le nom d'utilisateur à partir du cookie "username"
-		usernameCookie, err := r.Cookie("username")
-		if err != nil {
-			// Gérez l'erreur, par exemple, en redirigeant l'utilisateur vers une page de connexion s'il n'est pas connecté.
-			http.Redirect(w, r, "/log_in", http.StatusSeeOther)
-			return
-		}
-		username := usernameCookie.Value
+		messageNotif := "Une personne a pas aimer votre post"
 
-		db, err := api.OpenBDD()
-		if err != nil {
-			http.Error(w, "Internal Server Error open BDD", http.StatusInternalServerError)
-			return
-		}
-
-		//recupérer l'id de l'utilisateur
-		idUser, err := api.GetUserByUsername(db, username)
-		if err != nil {
-			http.Error(w, "Internal Server Error get id by username", http.StatusInternalServerError)
-			return
-		}
-
-		// Vérifiez si l'utilisateur a déjà disliké cette discussion
-
-		disliked, err := api.GetDislikesFromOneDiscussion(db, discussionIDInt, idUser)
+		notif, err := api.CheckIfNotificationNotDouble(db, idUser, discussionIDInt, messageNotif)
 		if err != nil && err != sql.ErrNoRows {
-			http.Error(w, "Internal Server Error get dislike from discussion", http.StatusInternalServerError)
+			http.Error(w, "Internal Server Error get like", http.StatusInternalServerError)
 			return
 		}
 
-		if disliked {
-			// Si l'utilisateur a déjà disliké la discussion, supprimez le dislike
-			err = api.DeleteDislikeByUserIdForDiscussion(db, discussionIDInt, idUser)
-			if err != nil {
-				http.Error(w, "Internal Server Error delete dislike by user id for discussion", http.StatusInternalServerError)
-				return
-			}
+		if notif {
+
 		} else {
-			// Si l'utilisateur a déjà aimé la discussion, supprimez le like
-			err = api.DeleteLikeByUserIdForDiscussion(db, discussionIDInt, idUser)
+			err = api.SetNotification(db, idUser, discussionIDInt, messageNotif)
 			if err != nil {
-				http.Error(w, "Internal Server Error delete like by user id for discussion", http.StatusInternalServerError)
-				return
-			}
-
-			// Ajoutez un dislike
-			err = api.SetDisLikesDiscussion(db, discussionIDInt, idUser)
-			if err != nil {
-				http.Error(w, "Internal Server Error dislike discussion", http.StatusInternalServerError)
+				http.Error(w, "Internal Server Error set notif", http.StatusInternalServerError)
 				return
 			}
 		}
-
-		var liens string
-
-		switch lien[0] {
-		case "Toutes les categories":
-			liens = "/"
-			break
-		case "discussion":
-			liens = "/discussion/" + id
-			break
-		default:
-	
-	
-			liens = "/?categories="
-			test := true
-			var temp int
-			var temp2 string
-			for i := 0; i < len(lien); i++ {
-	
-				temp, err = api.GetIDCategoryByCategory(db, lien[i])
-				if err != nil {
-					http.Error(w, "Internal Server Error get id category", http.StatusInternalServerError)
-					return
-				}
-				temp2 = strconv.Itoa(temp)
-				if test {
-					liens += temp2
-					test = false
-				}else{
-					liens += "," + temp2 
-				}
-			}
+		// Si l'utilisateur a déjà aimé la discussion, supprimez le like
+		err = api.DeleteLikeByUserIdForDiscussion(db, discussionIDInt, idUser)
+		if err != nil {
+			http.Error(w, "Internal Server Error delete like by user id for discussion", http.StatusInternalServerError)
+			return
 		}
 
-		// Redirigez l'utilisateur vers la page d'accueil après la mise à jour du dislike
-		http.Redirect(w, r, liens, http.StatusSeeOther)
+		// Ajoutez un dislike
+		err = api.SetDisLikesDiscussion(db, discussionIDInt, idUser)
+		if err != nil {
+			http.Error(w, "Internal Server Error dislike discussion", http.StatusInternalServerError)
+			return
+		}
+	}
+
+	var liens string
+
+	switch lien[0] {
+	case "Toutes les categories":
+		liens = "/"
+		break
+	case "discussion":
+		liens = "/discussion/" + id
+		break
+	default:
+
+		liens = "/?categories="
+		test := true
+		var temp int
+		var temp2 string
+		for i := 0; i < len(lien); i++ {
+
+			temp, err = api.GetIDCategoryByCategory(db, lien[i])
+			if err != nil {
+				http.Error(w, "Internal Server Error get id category", http.StatusInternalServerError)
+				return
+			}
+			temp2 = strconv.Itoa(temp)
+			if test {
+				liens += temp2
+				test = false
+			} else {
+				liens += "," + temp2
+			}
+		}
+	}
+
+	// Redirigez l'utilisateur vers la page d'accueil après la mise à jour du dislike
+	http.Redirect(w, r, liens, http.StatusSeeOther)
 }
 
 func DislikeComment(w http.ResponseWriter, r *http.Request) {
@@ -138,7 +153,6 @@ func DislikeComment(w http.ResponseWriter, r *http.Request) {
 
 	id = r.PostFormValue("id")
 	discussionId = r.PostFormValue("discussionID")
-
 
 	discussionIdInt, err := strconv.Atoi(discussionId)
 	if err != nil {
@@ -204,13 +218,8 @@ func DislikeComment(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-
 	liens := "/discussion/" + discussionId
 
 	// Redirigez l'utilisateur vers la page d'accueil après la mise à jour du like
 	http.Redirect(w, r, liens, http.StatusSeeOther)
 }
-
-
-
-

@@ -44,6 +44,7 @@ func main() {
 	http.HandleFunc("/edit_comment", forum.EditCommentHandler)
 	http.HandleFunc("/discussion/", forum.ShowDiscussionHandler)
 	http.HandleFunc("/profil", forum.ProfilHandler)
+	http.HandleFunc("/notification", forum.NotificationHandler)
 	
 
 	//fake page
@@ -55,6 +56,7 @@ func main() {
 	http.HandleFunc("/editComment", forum.EditComment)
 	http.HandleFunc("/deletePost", forum.DeletePost)
 	http.HandleFunc("/deleteComment", forum.DeleteComment)
+	http.HandleFunc("/SetNotifVu", forum.SetNotifVu)
 	
 
 	// Définir le dossier "static" comme dossier de fichiers statiques

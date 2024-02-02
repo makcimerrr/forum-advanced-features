@@ -84,6 +84,24 @@ func LikeDiscussion(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		messageNotif := "Une personne a aimer votre post"
+
+		notif, err := api.CheckIfNotificationNotDouble(db, idUser, discussionIDInt, messageNotif)
+		if err != nil && err != sql.ErrNoRows {
+			http.Error(w, "Internal Server Error get like", http.StatusInternalServerError)
+			return
+		}
+
+		if notif {
+
+		} else {
+			err = api.SetNotification(db, idUser, discussionIDInt, messageNotif)
+			if err != nil {
+				http.Error(w, "Internal Server Error set notif", http.StatusInternalServerError)
+				return
+			}
+		}
+
 		// Ajoutez un like
 		err = api.SetLikesDiscussion(db, discussionIDInt, idUser)
 		if err != nil {
@@ -103,7 +121,6 @@ func LikeDiscussion(w http.ResponseWriter, r *http.Request) {
 		break
 	default:
 
-
 		liens = "/?categories="
 		test := true
 		var temp int
@@ -115,8 +132,8 @@ func LikeDiscussion(w http.ResponseWriter, r *http.Request) {
 			if test {
 				liens += temp2
 				test = false
-			}else{
-				liens += "," + temp2 
+			} else {
+				liens += "," + temp2
 			}
 		}
 

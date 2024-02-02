@@ -199,6 +199,24 @@ func CreateBDD() {
 		fmt.Println(err)
 		return
 	}
+
+	// Création de la table s'il n'existe pas
+	createTable = `
+	CREATE TABLE IF NOT EXISTS "notification" (
+		"id"	INTEGER NOT NULL UNIQUE,
+		"user_id"	INTEGER NOT NULL,
+		"discussion_id"	INTEGER NOT NULL,
+		"message"	TEXT NOT NULL,
+		"vu"	INTEGER NOT NULL DEFAULT 0,
+		FOREIGN KEY("discussion_id") REFERENCES "discussion"("id"),
+		FOREIGN KEY("user_id") REFERENCES "user"("id"),
+		PRIMARY KEY("id" AUTOINCREMENT)
+	)`
+	_, err = db.Exec(createTable)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
 
 func OpenBDD() (*sql.DB, error) {

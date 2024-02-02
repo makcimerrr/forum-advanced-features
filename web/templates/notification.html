@@ -21,6 +21,7 @@
                 <a>Welcome {{.Username}}</a>
             </div>
             <div>
+                <a href="/notification">Notif ({{.NbNotification}})</a>
                 <a href="/profil">Profil</a>
                 <a href="/logout">Logout</a>
             </div>
@@ -51,31 +52,15 @@
 
             <section class="sectionProfil">
                 <div class="sousSectionProfil">
-                    {{if not .DiscussionsCreated}}
+                    {{if not .Notification}}
                     <h2>You've no Notification</h2>
                     {{else}}
-                    {{range .DiscussionsCreated}}
-                    <a href="/discussion/{{.ID}}">
+                    {{range .Notification}}
+                    <a href="/SetNotifVu?id={{.ID}}&discussionId={{.Discussion_id}}">
                         <div class="souSouSectionProfil">
-                            <div class="username">
-                                <h4>Username:</h4>
-                                <p>{{.Username}}</p>
-                            </div>
                             <div class="message">
                                 <h4>message:</h4>
                                 <p>{{.Message}}</p>
-                            </div>
-                            <div class="nbLike">
-                                <h4>👍</h4>
-                                <p>{{.NumberLike}}</p>
-                            </div>
-                            <div class="nbDislike">
-                                <h4>👎</h4>
-                                <p>{{.NumberDislike}}</p>
-                            </div>
-                            <div class="nbComment">
-                                <h4>💬</h4>
-                                <p>{{.NumberComment}}</p>
                             </div>
                         </div>
                         {{end}}

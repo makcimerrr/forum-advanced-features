@@ -29,3 +29,12 @@ type Categories struct {
 	ID       int
 	Category string
 }
+
+type Notification struct {
+	ID int
+	User_id int
+	Discussion_id int
+	Message string
+	vu bool
+
+}

@@ -1,15 +1,4 @@
-crée une table notif avec: 
-image cloche + nb
-redirection page notif
-
-idUser | idPost | idComment | TypeNotif | bool-Vu
-
-edit:   post ok
-        comment ok
-delete: 
-        post    OK
-        comment  OK                   
-
+profil voir les post dislikes 
 
 
 
